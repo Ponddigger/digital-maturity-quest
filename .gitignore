@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example
+work/
+private/
+source-documents/
+reports/
+*.pdf
+*.docx
+*.xlsx
+*.zip
+*.log

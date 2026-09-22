@@ -1,0 +1,13 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const data=require('../dist/questions.js');
+const E=require('../dist/engine.js');
+const filled=(kind)=>Object.fromEntries(data.questions.map(q=>[q.id,{confirmed:true,values:q.type==='multi'?(kind==='max'?q.items.map((_,i)=>i).filter(i=>i!==q.exclusive):[]):q.items.map(()=>kind==='max'?q.labels.length-1:0)}]));
+test('all 86 source items and all 11 groups are mapped exactly once',()=>{assert.equal(data.questions.length,11);assert.equal(data.questions.reduce((n,q)=>n+q.items.length,0),86);assert.deepEqual(data.sectors.flatMap(s=>s.questions),data.questions.map(q=>q.id));});
+test('minimum and maximum produce 0 and 100, never NaN',()=>{for(const [kind,expected] of [['min',0],['max',100]]){const a=filled(kind);assert.equal(E.scores(a).overall,expected);assert.equal(E.progress(a).xp,1400);assert.equal(E.progress(a).percent,100);}});
+test('planned investment alone does not increase current maturity',()=>{assert.equal(E.scoreQuestion(E.byId.q1,{confirmed:true,values:Array(10).fill(2)}),0);assert.equal(E.scoreQuestion(E.byId.q1,{confirmed:true,values:Array(10).fill(3)}),100);});
+test('no digital collection rejects contradictory digital practices but permits a policy',()=>{assert.equal(E.validAnswer(E.byId.q7,{confirmed:true,values:[1,2]}),false);assert.equal(E.validAnswer(E.byId.q7,{confirmed:true,values:[0,1]}),true);assert.equal(E.scoreQuestion(E.byId.q7,{confirmed:true,values:[0,1]}),0);});
+test('partial or malformed answers cannot complete a report',()=>{assert.equal(E.scores({}).overall,null);assert.equal(E.validAnswer(E.byId.q4,{confirmed:true,values:[5]}),false);assert.equal(E.validAnswer(E.byId.q4,{confirmed:true,values:Array(7).fill(9)}),false);assert.deepEqual(E.cleanAnswers({q2:{confirmed:true,values:[0,0]},q3:{confirmed:true,values:['0']}}),{});});
+test('XP depends only on completion, edits do not inflate XP',()=>{const a=filled('min');assert.equal(E.progress(a).xp,E.progress(filled('max')).xp);a.q1.values.fill(3);assert.equal(E.progress(a).xp,1400);delete a.q1;assert.equal(E.progress(a).xp,1250);});
+test('overall weights six dimensions equally before rounding',()=>{const a=filled('min');a.q9.values.fill(5);assert.equal(E.scores(a).overall,100/6);});
+test('fictional demo is complete, valid, and independent on every call',()=>{const a=E.demoAnswers();assert.equal(E.progress(a).completed,11);a.q1.values[0]=999;assert.notEqual(E.demoAnswers().q1.values[0],999);});
