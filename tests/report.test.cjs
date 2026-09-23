@@ -11,9 +11,10 @@ test('PDF includes a complete answer appendix and only the intended contact link
  const bytes=await P.generate(R.create(E.demoAnswers(),{demo:true,date:'2026-09-22'}));
  assert.equal(Buffer.from(bytes).subarray(0,5).toString(),'%PDF-');
  const doc=await PDFDocument.load(bytes);assert.ok(doc.getPageCount()>=19);
- const annotations=doc.getPages().at(-1).node.Annots();assert.equal(annotations.size(),3);
+ const annotations=doc.getPages().at(-1).node.Annots();assert.equal(annotations.size(),4);
  const urls=Array.from({length:annotations.size()},(_,i)=>annotations.lookup(i,PDFDict).lookup(PDFName.of('A'),PDFDict).lookup(PDFName.of('URI'),PDFString).decodeText());
  assert.ok(urls.includes('https://digithub.se/'));assert.ok(urls.includes('tel:+46709627036'));
+ assert.ok(urls.includes('https://www.techtank.se/'));
  const mail=urls.find(url=>url.startsWith('mailto:jorg.teichgraeber@techtank.se?subject='));assert.ok(mail);assert.ok(!mail.includes('body='));
 });
 test('zero and full maturity reports generate successfully',async()=>{

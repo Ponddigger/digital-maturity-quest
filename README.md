@@ -35,6 +35,12 @@ Som standard finns svar bara i flikens minne och försvinner vid omladdning elle
 
 Den offentliga koden innehåller inga originaldokument, inga verkliga företagssvar och inga uppgifter från det konfidentiella exempelresultatet. Exempeldata är konstruerade i `demoAnswers()`.
 
+## Logotyper och finansieringsinformation
+
+Techtank-logotypen länkar till https://www.techtank.se/ (ny flik i spelet, klickbar även i PDF). Rapportens ”Ert nästa steg” visar den tillhandahållna svenska originalbilden med DigIT Hub-logotypen, EU-emblemet och hela texten ”Medfinansieras av Europeiska unionen”. Bilden återges oförändrad på vit bakgrund, med bibehållna proportioner och friyta. EU-emblemet är större än 1 cm högt i PDF.
+
+Placeringen utgår från [Europeiska kommissionens riktlinjer om synlighet](https://commission.europa.eu/funding-tenders/managing-your-project/communicating-and-raising-eu-visibility_sv). Det är en praktisk anpassning av det levererade materialet, ingen formell granskning av projektets alla finansieringsvillkor.
+
 ## Kostnadsfritt DMA-samtal
 
 I slutet av spelet och på rapportens sista sida finns en inbjudan att kontakta Jörg Teichgraeber, projektledare för [DigIT Hub Sweden](https://digithub.se/) hos Techtank i Olofström. Kontakt sker via e-post eller telefon på spelarens initiativ. Spelet skickar eller bifogar aldrig rapporter eller svar automatiskt. Ingen serverlagring eller rapportinsamling finns.

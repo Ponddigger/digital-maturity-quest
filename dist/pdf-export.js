@@ -12,12 +12,16 @@ async function generate(model){
  doc.setAuthor('Digitala Mognadsresan');doc.setCreator('Digitala Mognadsresan');doc.setSubject('Självskattning med egen poängmodell');doc.setLanguage('sv-SE');
  doc.registerFontkit(fonts);
  const regular=await doc.embedFont(decode(assets.regular),{subset:true}),bold=await doc.embedFont(decode(assets.bold),{subset:true}),display=await doc.embedFont(decode(assets.display),{subset:true});
- const logo=await doc.embedPng(decode(assets.logo));
+ const logo=await doc.embedPng(decode(assets.logo)),fundingLogos=await doc.embedPng(decode(assets.fundingLogos));
  const W=595.28,H=841.89,M=48,CW=W-2*M;
  const color=hex=>{const n=parseInt(hex.replace('#',''),16);return rgb((n>>16)/255,((n>>8)&255)/255,(n&255)/255);};
  const ink=color('#054169'),muted=color('#46545F'),lineColor=color('#C9D3DB'),accent=color('#FAD773'),green=color('#054169'),paper=color('#EFF6FB');
  const safe=t=>String(t).replace(/[\u2010-\u2015]/g,'-').replace(/\u202f|\u00a0/g,' ').replace(/↗|→/g,'>').replace(/✓/g,'');
  let page;
+ function uriLink(url,x,y,width,height){
+  const annotation=doc.context.obj({Type:'Annot',Subtype:'Link',Rect:[x,H-y-height,x+width,H-y],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(url)}});
+  page.node.addAnnot(doc.context.register(annotation));
+ }
  const text=(t,x,y,size=11,font=regular,c=ink)=>{if(font===bold&&size>=16){font=display;t=String(t).toUpperCase();}page.drawText(safe(t),{x,y:H-y-size,size,font,color:c});};
  const rect=(x,y,w,h,c,bc)=>page.drawRectangle({x,y:H-y-h,width:w,height:h,color:c,...bc?{borderColor:bc,borderWidth:.6}:{}});
  const rule=(x1,y1,x2,y2,c=lineColor,width=.7)=>page.drawLine({start:{x:x1,y:H-y1},end:{x:x2,y:H-y2},color:c,thickness:width});
@@ -28,7 +32,7 @@ async function generate(model){
   if(current)lines.push(current);
   for(const l of lines){text(l,x,y,size,font,c);y+=leading;}return y;
  }
- function newPage(kicker,title,subtitle){page=doc.addPage([W,H]);rect(0,0,W,12,ink);text('DIGITALA MOGNADSRESAN',M,31,9,bold,muted);text(model.date,M,48,8,regular,muted);page.drawImage(logo,{x:W-M-145,y:H-24-145*logo.height/logo.width,width:145,height:145*logo.height/logo.width});text(kicker.toUpperCase(),M,76,9,bold,green);para(title,M,97,CW,27,bold,ink,32);if(subtitle)para(subtitle,M,144,CW,10,regular,muted,15);}
+ function newPage(kicker,title,subtitle){page=doc.addPage([W,H]);rect(0,0,W,12,ink);text('DIGITALA MOGNADSRESAN',M,31,9,bold,muted);text(model.date,M,48,8,regular,muted);page.drawImage(logo,{x:W-M-145,y:H-24-145*logo.height/logo.width,width:145,height:145*logo.height/logo.width});uriLink('https://www.techtank.se/',W-M-145,24,145,145*logo.height/logo.width);text(kicker.toUpperCase(),M,76,9,bold,green);para(title,M,97,CW,27,bold,ink,32);if(subtitle)para(subtitle,M,144,CW,10,regular,muted,15);}
  function radar(cx,cy,r,values){
   const pt=(i,v)=>{const a=(-90+i*60)*Math.PI/180;return [cx+Math.cos(a)*r*v/100,cy+Math.sin(a)*r*v/100];};
   for(const v of [25,50,75,100])for(let i=0;i<6;i++){const a=pt(i,v),b=pt((i+1)%6,v);rule(...a,...b,lineColor,.7);}
@@ -112,24 +116,24 @@ async function generate(model){
   }
  }
  newPage('Ert nästa steg','Vi tar nästa steg tillsammans.','Ett kostnadsfritt samtal om er digitala mognad och möjligheterna framåt.');
- text('Gå igenom er DMA tillsammans med mig',M,205,18,bold);
- para('Vad säger er profil om nuläget? Vilka insatser skulle göra störst skillnad i er verksamhet? Boka ett kostnadsfritt möte där vi går igenom er digitala mognadsanalys och pratar om hur projektet kan hjälpa er på digitaliseringsresan och med implementering av generativ AI.',M,246,CW,13,regular,muted,21);
- rect(M,393,CW,178,paper);
- text(model.contact.name,M+22,417,22,bold);
+ text('Gå igenom er DMA tillsammans med mig',M,195,18,bold);
+ para('Vad säger er profil om nuläget? Vilka insatser skulle göra störst skillnad i er verksamhet? Boka ett kostnadsfritt möte där vi går igenom er digitala mognadsanalys och pratar om hur projektet kan hjälpa er på digitaliseringsresan och med implementering av generativ AI.',M,230,CW,12,regular,muted,19);
+ rect(M,344,CW,178,paper);
+ text(model.contact.name,M+22,368,22,bold);
  const rolePrefix=model.contact.role+' för ';
- text(rolePrefix,M+22,452,12,regular,muted);
- link(model.contact.projectName,model.contact.projectUrl,M+22+regular.widthOfTextAtSize(rolePrefix,12),452);
- text('hos '+model.contact.organisation,M+22,473,12,regular,muted);
+ text(rolePrefix,M+22,403,12,regular,muted);
+ link(model.contact.projectName,model.contact.projectUrl,M+22+regular.widthOfTextAtSize(rolePrefix,12),403);
+ text('hos '+model.contact.organisation,M+22,424,12,regular,muted);
  function link(label,url,x,y){
   text(label,x,y,12,bold,green);const width=bold.widthOfTextAtSize(label,12);rule(x,y+16,x+width,y+16,green,.6);
-  const annotation=doc.context.obj({Type:'Annot',Subtype:'Link',Rect:[x,H-y-18,x+width,H-y+2],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(url)}});
-  page.node.addAnnot(doc.context.register(annotation));
+  uriLink(url,x,y-2,width,20);
  }
- link(model.contact.email,'mailto:'+model.contact.email+'?subject='+encodeURIComponent(model.contact.subject),M+22,513);
- link(model.contact.phone,'tel:'+model.contact.phoneLink,M+22,538);
- text('Boka via e-post eller telefon',M,607,15,bold);
- para('Föreslå gärna en tid som passar er. Du avgör själv om du vill bifoga rapporten inför samtalet.',M,641,CW,12,regular,muted,19);
- para('Ingen automatisk delning: rapporten har skapats på din enhet. Spelet skickar varken rapporten eller era svar till kontaktpersonen.',M,729,CW,10,regular,muted,15);
+ link(model.contact.email,'mailto:'+model.contact.email+'?subject='+encodeURIComponent(model.contact.subject),M+22,464);
+ link(model.contact.phone,'tel:'+model.contact.phoneLink,M+22,489);
+ para('Boka via e-post eller telefon och föreslå en tid som passar er. Du väljer själv om du vill bifoga rapporten. Spelet skickar inga svar automatiskt.',M,544,CW,11,regular,muted,17);
+ // Original Swedish artwork, preserving its spacing, proportions and full EU funding statement.
+ const fundingWidth=330,fundingHeight=fundingWidth*fundingLogos.height/fundingLogos.width;
+ page.drawImage(fundingLogos,{x:(W-fundingWidth)/2,y:H-584-fundingHeight,width:fundingWidth,height:fundingHeight});
  const pages=doc.getPages();pages.forEach((p,i)=>{page=p;rule(M,795,W-M,795);text(model.demo?'FIKTIVT EXEMPEL':'INTERN FÖRETAGSINFORMATION',M,808,8,bold,muted);text('Digitala Mognadsresan',240,808,8,regular,muted);text((i+1)+' / '+pages.length,W-M-28,808,8,regular,muted);});
  return doc.save();
 }
