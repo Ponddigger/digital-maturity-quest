@@ -12,6 +12,7 @@ Ett svenskt webbläsarspel som gör en digital mognadsanalys till sex uppdrag. S
 - Valfri ordning, möjlighet att återvända och ändra svar samt valfri lokal lagring.
 - Spindeldiagram, skriven bedömning per område och ett förslag för nästa 90 dagar.
 - Direkt nedladdning av en fullständig PDF med vektordiagram, bedömning, handlingsförslag, samtliga 86 svar och kontaktuppgifter.
+- Lokal CSV-export av alla 86 svar för vidare hantering i exempelvis Excel.
 - Fiktiv exempelrapport som aldrig ändrar spelarens egna svar.
 - Anpassning för mobil, tangentbordsstöd och reducerad rörelse.
 
@@ -33,17 +34,47 @@ Spelet frågar inte efter företagsnamn, personnamn, e-post eller andra identite
 
 Som standard finns svar bara i flikens minne och försvinner vid omladdning eller stängning. Spelaren kan uttryckligen välja att spara bekräftade svar på enheten. Funktionen **Radera svar och börja om** tar bort spelets lagrade svar. Undvik lokal lagring på delade datorer. Nedladdade rapporter hanteras av spelaren och raderas inte av spelet.
 
+CSV-filen skapas helt lokalt i webbläsaren med `Blob` och `URL.createObjectURL`, utan identitetsuppgifter eller nätverksanrop. Säkerhetspolicyn `connect-src 'none'` gäller oförändrat. Varken CSV eller PDF skickas automatiskt; spelaren väljer själv om någon fil ska delas.
+
 Den offentliga koden innehåller inga originaldokument, inga verkliga företagssvar och inga uppgifter från det konfidentiella exempelresultatet. Exempeldata är konstruerade i `demoAnswers()`.
 
 ## Logotyper och finansieringsinformation
 
-Techtank-logotypen länkar till https://www.techtank.se/ (ny flik i spelet, klickbar även i PDF). Rapportens ”Ert nästa steg” visar den tillhandahållna svenska originalbilden med DigIT Hub-logotypen, EU-emblemet och hela texten ”Medfinansieras av Europeiska unionen”. Bilden återges oförändrad på vit bakgrund, med bibehållna proportioner och friyta. EU-emblemet är större än 1 cm högt i PDF.
+Techtank-logotypen länkar till https://www.techtank.se/ (ny flik i spelet, klickbar även i PDF). Den tillhandahållna svenska originalbilden med DigIT Hub-logotypen, EU-emblemet och hela texten ”Medfinansieras av Europeiska unionen” visas i sidhuvudet på alla spelskärmar, på PDF:ens försättssida och under rapportens ”Ert nästa steg”. På mindre skärmar placeras finansieringsbilden på en egen rad. Bilden återges oförändrad på vit bakgrund, med bibehållna proportioner och friyta. EU-emblemet är högre än Techtank-logotypen och större än 1 cm högt i PDF.
+
+Startskärmen och dialogen ”Metod & integritet” beskriver DigIT Hub Sweden som en European Digital Innovation Hub som medfinansieras av Europeiska unionen. Sidfoten visar samma projekt- och finansieringsinformation.
 
 Placeringen utgår från [Europeiska kommissionens riktlinjer om synlighet](https://commission.europa.eu/funding-tenders/managing-your-project/communicating-and-raising-eu-visibility_sv). Det är en praktisk anpassning av det levererade materialet, ingen formell granskning av projektets alla finansieringsvillkor.
 
 ## Kostnadsfritt DMA-samtal
 
 I slutet av spelet och på rapportens sista sida finns en inbjudan att kontakta Jörg Teichgraeber, projektledare för [DigIT Hub Sweden](https://digithub.se/) hos Techtank i Olofström. Kontakt sker via e-post eller telefon på spelarens initiativ. Spelet skickar eller bifogar aldrig rapporter eller svar automatiskt. Ingen serverlagring eller rapportinsamling finns.
+
+## CSV-export
+
+Knappen **Ladda ned svaren som CSV** finns bredvid PDF-knappen i den färdiga rapporten och i den fiktiva exempelrapporten. Alla 11 frågeomgångar måste vara bekräftade för att exportera spelarens rapport. CSV:n innehåller 86 datarader och en rubrikrad, utan poäng, nivåer eller XP. Ett uttryckligt ”Inget” exporteras som ej valda alternativ; modulens stöd för obesvarade grupper behåller raderna men lämnar svarsfälten tomma.
+
+Formatet är UTF-8 med BOM, semikolon som avgränsare och CRLF mellan posterna, anpassat för svensk Excel. Alla fält omges av citattecken, interna citattecken dubbleras och semikolon eller radbrytningar i text behålls i fältet. Filnamnet är `dma-svar-ÅÅÅÅ-MM-DD.csv`, med enhetens lokala datum. Exemplet heter `dma-svar-fiktivt-exempel.csv` och markeras med `exempeldata=ja` på varje rad.
+
+Kolumnerna ligger i följande ordning:
+
+| Kolumn | Innehåll |
+| --- | --- |
+| `schema_version` | `1`; höjs vid framtida formatändringar |
+| `exportdatum` | Lokalt datum som `ÅÅÅÅ-MM-DD` |
+| `exempeldata` | `ja` för fiktiva exempel, annars `nej` |
+| `omrade_id` | Områdets id i frågebanken, exempelvis `strategy` |
+| `omrade` | Områdets svenska namn |
+| `fraga_nr` | Ursprungligt frågenummer, 1–11 |
+| `fraga_id` | Frågans id, exempelvis `q1` |
+| `fraga_titel` | Frågans titel |
+| `fragetyp` | `investment`, `multi` eller `scale` |
+| `del_nr` | Bedömningsdelens position i frågan, från 1 |
+| `del_text` | Bedömningsdelens ursprungliga formulering |
+| `svar_kod` | För investering/skala: index i `labels` från 0. För flerval: 1 = valt, 0 = ej valt |
+| `svar_text` | Motsvarande skaletikett, eller `Vald`/`Ej vald` för flerval |
+
+CSV:n förenklar vidare hantering av svaren. Den är inte en verifierad importmall för EU:s EDIH-portal; en framtida import beror på portalens stöd och formatkrav. Spelaren kan själv skicka CSV och PDF till Jörg inför ett kostnadsfritt DMA-samtal.
 
 ## Poängmodell
 
@@ -87,7 +118,8 @@ Allt som behövs i webbläsaren finns i `dist/`:
 - `contact.js`: uttryckligen publicerade kontaktuppgifter
 - `report-model.js`: gemensam bedömning för skärm och PDF
 - `pdf-export.js`: lokal PDF-generering
-- `pdf-assets.js` och `assets/`: lokala typsnitt och Techtanks logotyp
+- `csv-export.js`: lokal, versionsmärkt export av alla svar
+- `pdf-assets.js` och `assets/`: lokala typsnitt samt Techtanks och projektets finansieringslogotyper
 - `vendor/`: pdf-lib 1.17.1, @pdf-lib/fontkit 1.1.1 och licensinformation
 - `icons.js`: lokala Lucide-ikoner (ISC-licens)
 - `app.js`: spel, rapport, lokal lagring och valfria WebMCP-verktyg

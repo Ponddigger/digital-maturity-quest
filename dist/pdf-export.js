@@ -52,8 +52,10 @@ async function generate(model){
  text(Math.round(model.scores.overall),M,198,68,bold,green);text('/ 100',M+128,247,15,regular,muted);
  para(model.level,M,284,220,19,bold,ink,23);para('Samlad poäng i spelets modell',M,321,190,10,regular,muted,14);
  radar(397,290,79,model.scores.sectors.map(s=>s.score));
- let y=442;for(const s of model.scores.sectors){text(s.name,M,y,11,regular,ink);text(Math.round(s.score)+' %',W-M-38,y,11,bold,green);rect(M,y+20,CW,4,lineColor);rect(M,y+20,CW*s.score/100,4,green);y+=43;}
- para('Så ska resultatet läsas',M,711,CW,12,bold,ink);para('Ett samtalsunderlag om era arbetssätt och teknikval. Detta är spelets egen modell, inte ett officiellt EU DMAT-resultat eller en certifiering.',M,734,CW,10,regular,muted,15);
+ let y=419;for(const s of model.scores.sectors){text(s.name,M,y,11,regular,ink);text(Math.round(s.score)+' %',W-M-38,y,11,bold,green);rect(M,y+20,CW,4,lineColor);rect(M,y+20,CW*s.score/100,4,green);y+=30;}
+ para('Ett samtalsunderlag om era arbetssätt och teknikval. Detta är spelets egen modell, inte ett officiellt EU DMAT-resultat eller en certifiering.',M,600,CW,10,regular,muted,14);
+ const coverFundingWidth=280,coverFundingHeight=coverFundingWidth*fundingLogos.height/fundingLogos.width;
+ page.drawImage(fundingLogos,{x:(W-coverFundingWidth)/2,y:H-630-coverFundingHeight,width:coverFundingWidth,height:coverFundingHeight});
  newPage('Överblick','Er samlade bedömning.','Sex perspektiv som hjälper er att välja nästa utvecklingsinsats.');
  let yy=201;yy=para(model.summary,M,yy,CW,14,regular,ink,22)+26;
  text('Styrkor och utvecklingsutrymme',M,yy,16,bold);yy+=35;
