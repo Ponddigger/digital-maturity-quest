@@ -9,7 +9,7 @@
 - Valfri lokal lagring har verifierats genom omladdning.
 - Direkt PDF-hämtning och skriven återkoppling har kontrollerats i gränssnittet.
 - PDF-exemplet har 19 A4-sidor med vektordiagram, bedömning, 90-dagarsförslag, metod, alla 86 bedömningsdelar och svar samt kontaktuppgifter. Sidornas layout har granskats visuellt.
-- Namnet DigIT Hub Sweden länkar till https://digithub.se/ i spelet och PDF-rapporten.
+- Namnet DigIT Hub Sweden länkar till https://digithub.se/ i spelet och PDF-rapporten. Även logotypen är klickbar i sidhuvudet, under ”Ert nästa steg” och på PDF:ens första och sista sida; PDF-länkarna kontrolleras i rapporttestet.
 - Layouten använder Techtanks lokala logotyp, Open Sans och Open Sans Condensed samt profilfärger.
 - WebMCP-verktygens registrering, giltiga svar, avvisning av ogiltiga svar och återläsning av tillstånd har verifierats i en webbläsare som stöder dem.
 - Källmaterial och konfidentiella företagsdata ingår inte i publiceringspaketet.

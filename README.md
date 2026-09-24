@@ -42,6 +42,8 @@ Den offentliga koden innehåller inga originaldokument, inga verkliga företagss
 
 Techtank-logotypen länkar till https://www.techtank.se/ (ny flik i spelet, klickbar även i PDF). Den tillhandahållna svenska originalbilden med DigIT Hub-logotypen, EU-emblemet och hela texten ”Medfinansieras av Europeiska unionen” visas i sidhuvudet på alla spelskärmar, på PDF:ens försättssida och under rapportens ”Ert nästa steg”. På mindre skärmar placeras finansieringsbilden på en egen rad. Bilden återges oförändrad på vit bakgrund, med bibehållna proportioner och friyta. EU-emblemet är högre än Techtank-logotypen och större än 1 cm högt i PDF.
 
+DigIT Hub-logotypen länkar till https://digithub.se/ i sidhuvudet och under ”Ert nästa steg” (ny flik), samt på PDF:ens första och sista sida.
+
 Startskärmen och dialogen ”Metod & integritet” beskriver DigIT Hub Sweden som en European Digital Innovation Hub som medfinansieras av Europeiska unionen. Sidfoten visar samma projekt- och finansieringsinformation.
 
 Placeringen utgår från [Europeiska kommissionens riktlinjer om synlighet](https://commission.europa.eu/funding-tenders/managing-your-project/communicating-and-raising-eu-visibility_sv). Det är en praktisk anpassning av det levererade materialet, ingen formell granskning av projektets alla finansieringsvillkor.

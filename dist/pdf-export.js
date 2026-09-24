@@ -56,6 +56,7 @@ async function generate(model){
  para('Ett samtalsunderlag om era arbetssätt och teknikval. Detta är spelets egen modell, inte ett officiellt EU DMAT-resultat eller en certifiering.',M,600,CW,10,regular,muted,14);
  const coverFundingWidth=280,coverFundingHeight=coverFundingWidth*fundingLogos.height/fundingLogos.width;
  page.drawImage(fundingLogos,{x:(W-coverFundingWidth)/2,y:H-630-coverFundingHeight,width:coverFundingWidth,height:coverFundingHeight});
+ uriLink(model.contact.projectUrl,(W-coverFundingWidth)/2,630,coverFundingWidth,coverFundingHeight);
  newPage('Överblick','Er samlade bedömning.','Sex perspektiv som hjälper er att välja nästa utvecklingsinsats.');
  let yy=201;yy=para(model.summary,M,yy,CW,14,regular,ink,22)+26;
  text('Styrkor och utvecklingsutrymme',M,yy,16,bold);yy+=35;
@@ -136,6 +137,7 @@ async function generate(model){
  // Original Swedish artwork, preserving its spacing, proportions and full EU funding statement.
  const fundingWidth=330,fundingHeight=fundingWidth*fundingLogos.height/fundingLogos.width;
  page.drawImage(fundingLogos,{x:(W-fundingWidth)/2,y:H-584-fundingHeight,width:fundingWidth,height:fundingHeight});
+ uriLink(model.contact.projectUrl,(W-fundingWidth)/2,584,fundingWidth,fundingHeight);
  const pages=doc.getPages();pages.forEach((p,i)=>{page=p;rule(M,795,W-M,795);text(model.demo?'FIKTIVT EXEMPEL':'INTERN FÖRETAGSINFORMATION',M,808,8,bold,muted);text('Digitala Mognadsresan',240,808,8,regular,muted);text((i+1)+' / '+pages.length,W-M-28,808,8,regular,muted);});
  return doc.save();
 }
